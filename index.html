@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="padding: 100px">
+    <canvas
+      id="canvas"
+      style="background-color: teal"
+      width="500"
+      height="500"
+    ></canvas>
+    <script>
+      let kinokoGroup = []
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const imageBoy = new Image();
+      const imageItem = new Image();
+      imageBoy.src = "./img/ico_boy1_1.gif";
+      imageItem.src = './img/ico_mushroom2_23.gif'
+
+      let charaX = 0;
+      let charaY = 0;
+
+
+      class Kinoko{
+        constructor(x, y, width = 20, height = 20) {
+          this.x = x;
+          this.y = y;
+          this.width = width;
+          this.height = height;
+          this.isTouchedKinoko = false
+          kinokoGroup.push(this)
+        }
+        draw() {
+          if(!this.isTouchedKinoko){
+            ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
+          }
+        }
+        // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
+        getKinoko(){
+          if((charaX === this.x) && (charaY === this.y)){ // FIXME 座標の取り方適当
+            this.isTouchedKinoko = true
+            alert('kinoko get!')
+            ctx.clearRect(this.x, this.y, this.width, this.height);
+          }
+        }
+      }
+
+
+      let kinoko1 = new Kinoko(200,200);
+      let kinoko2 = new Kinoko(340,100);
+      let kinoko3 = new Kinoko(30,210);
+      let kinoko4 = new Kinoko(100,100);
+
+
+      const charaMove = () => {
+        ctx.clearRect(0, 0, 500, 500);
+        ctx.drawImage(imageBoy, charaX, charaY, 18, 34);
+        kinokoGroup.forEach(kinoko => {
+          kinoko.draw()
+          kinoko.getKinoko()
+        })
+      }
+
+      imageBoy.onload = () => {
+        ctx.drawImage(imageBoy, charaX, charaX, 18, 34);
+      };
+      imageItem.onload = () => {
+        kinokoGroup.forEach(kinoko => {
+          kinoko.draw()
+        })
+      }
+      window.onkeydown = (event) => {
+        switch (event.code) {
+          case "ArrowUp":
+            charaY -= 10;
+            break;
+          case "ArrowDown":
+            charaY += 10;
+            break;
+          case "ArrowRight":
+            charaX += 10;
+            break;
+          case "ArrowLeft":
+            charaX -= 10;
+            break;
+          default:
+          // code block
+        }
+
+        // if((charaX >= kinoko1.x + 18 && charaX <= 340) && (charaY >= kinoko1.y - 34 && charaY <= 340)){
+        //   kinoko1.isTouchedKinoko = true
+        //   alert('you\'ve got it!');
+        // }
+        charaMove();
+      };
+    </script>
+  </body>
+</html>

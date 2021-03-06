@@ -25,14 +25,20 @@
 
       let charaX = 0;
       let charaY = 0;
+      let charaW = 18;
+      let charaH = 34;
+      let charaCentX;
+      let charaCentY;
 
 
       class Kinoko{
-        constructor(x, y, width = 20, height = 20) {
+        constructor(x, y, width = 20, height = 20, centerX, centerY) {
           this.x = x;
           this.y = y;
           this.width = width;
           this.height = height;
+          this.centerX = this.x + this.width / 2;
+          this.centerY = this.y + this.height / 2;
           this.isTouchedKinoko = false
           kinokoGroup.push(this)
         }
@@ -43,7 +49,7 @@
         }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
         getKinoko(){
-          if((charaX === this.x) && (charaY === this.y)){ // FIXME 座標の取り方適当
+          if((charaCentX >= this.centerX && charaCentX <= this.x + this.width)){ 
             this.isTouchedKinoko = true
             alert('kinoko get!')
             ctx.clearRect(this.x, this.y, this.width, this.height);
@@ -57,6 +63,8 @@
       let kinoko3 = new Kinoko(30,210);
       let kinoko4 = new Kinoko(100,100);
 
+      console.debug(kinoko1.centerX, kinoko2.centerX, kinoko3.centerX)
+
 
       const charaMove = () => {
         ctx.clearRect(0, 0, 500, 500);
@@ -65,10 +73,13 @@
           kinoko.draw()
           kinoko.getKinoko()
         })
+        charaCentX = charaX + charaW / 2;
+        charaCentY = charaY + charaH / 2;
+        console.debug(charaCentX, charaCentY)
       }
 
       imageBoy.onload = () => {
-        ctx.drawImage(imageBoy, charaX, charaX, 18, 34);
+        ctx.drawImage(imageBoy, charaX, charaX, charaW, charaH);
       };
       imageItem.onload = () => {
         kinokoGroup.forEach(kinoko => {
@@ -90,13 +101,7 @@
             charaX -= 10;
             break;
           default:
-          // code block
         }
-
-        // if((charaX >= kinoko1.x + 18 && charaX <= 340) && (charaY >= kinoko1.y - 34 && charaY <= 340)){
-        //   kinoko1.isTouchedKinoko = true
-        //   alert('you\'ve got it!');
-        // }
         charaMove();
       };
     </script>

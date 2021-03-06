@@ -13,8 +13,12 @@
       width="500"
       height="500"
     ></canvas>
+    <p>取れたきのこの数<span id="js-kinoko"></span>個</p>
     <script>
       let kinokoGroup = []
+      let kinokoCount = 0
+      const kinokoDOM = document.getElementById("js-kinoko")
+      kinokoDOM.innerText = kinokoCount
 
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
@@ -51,7 +55,9 @@
         getKinoko(){
           if((charaCentX >= this.centerX && charaCentX <= this.x + this.width) && (charaCentY >= this.centerY && charaCentY <= this.y + this.height)){ 
             this.isTouchedKinoko = true
-            alert('kinoko get!')
+            kinokoCount++
+            kinokoDOM.innerText = kinokoCount
+            // alert('kinoko get!')
             delete this;
           }
         }

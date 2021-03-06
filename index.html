@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style type="text/css">
+      .kinoko-count{
+        font-size: 20px;
+        font-weight: bold;
+        color: orange;
+      }
+    </style>
   </head>
   <body style="padding: 100px">
     <canvas
@@ -13,7 +20,7 @@
       width="500"
       height="500"
     ></canvas>
-    <p>取れたきのこの数<span id="js-kinoko"></span>個</p>
+    <p>取れたきのこの数<span id="js-kinoko" class="kinoko-count"></span>個</p>
     <script>
       let kinokoGroup = []
       let kinokoCount = 0

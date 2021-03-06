@@ -49,7 +49,7 @@
         }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
         getKinoko(){
-          if((charaCentX >= this.centerX && charaCentX <= this.x + this.width)){ 
+          if((charaCentX >= this.centerX && charaCentX <= this.x + this.width) && (charaCentY >= this.centerY && charaCentY <= this.y + this.height)){ 
             this.isTouchedKinoko = true
             alert('kinoko get!')
             delete this;
@@ -57,14 +57,19 @@
         }
       }
 
-
-      let kinoko1 = new Kinoko(200,200);
-      let kinoko2 = new Kinoko(340,100);
-      let kinoko3 = new Kinoko(30,210);
-      let kinoko4 = new Kinoko(100,100);
-
-      console.debug(kinoko1.centerX, kinoko2.centerX, kinoko3.centerX)
-
+      // キノコのインスタンス化複数
+      const kinokoNum = 30;
+      const makeKinokos = () => {
+        let kinokos = {}
+        
+        for (let i = 0; i < kinokoNum; i++) {
+          const randomNumX = Math.floor(Math.random() * 480);
+          const randomNumY = Math.floor(Math.random() * 480);
+          kinokos[i] = new Kinoko(randomNumX, randomNumY)
+        }
+        return kinokos
+      }
+      makeKinokos()
 
       const charaMove = () => {
         ctx.clearRect(0, 0, 500, 500);
@@ -75,7 +80,6 @@
         })
         charaCentX = charaX + charaW / 2;
         charaCentY = charaY + charaH / 2;
-        console.debug(charaCentX, charaCentY)
       }
 
       imageBoy.onload = () => {

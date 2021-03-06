@@ -52,7 +52,7 @@
           if((charaCentX >= this.centerX && charaCentX <= this.x + this.width)){ 
             this.isTouchedKinoko = true
             alert('kinoko get!')
-            ctx.clearRect(this.x, this.y, this.width, this.height);
+            delete this;
           }
         }
       }

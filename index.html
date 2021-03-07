@@ -22,11 +22,14 @@
     ></canvas>
     <p>取れたきのこの数<span id="js-kinoko" class="kinoko-count"></span>個</p>
     <script>
+      // きのこインスタンス格納用配列
       let kinokoGroup = []
+      // 取れたきのこの数
       let kinokoCount = 0
       const kinokoDOM = document.getElementById("js-kinoko")
       kinokoDOM.innerText = kinokoCount
 
+      // キャンバス
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
       const imageBoy = new Image();
@@ -34,6 +37,7 @@
       imageBoy.src = "./img/ico_boy1_1.gif";
       imageItem.src = './img/ico_mushroom2_23.gif'
 
+      // TODO ここクラス作れるのでは？
       let charaX = 0;
       let charaY = 0;
       let charaW = 18;
@@ -41,7 +45,7 @@
       let charaCentX;
       let charaCentY;
 
-
+      // きのこクラス
       class Kinoko{
         constructor(x, y, width = 20, height = 20, centerX, centerY) {
           this.x = x;
@@ -74,16 +78,19 @@
       const kinokoNum = 30;
       const makeKinokos = () => {
         let kinokos = {}
+        let max = 480
+        let min = 30
         
         for (let i = 0; i < kinokoNum; i++) {
-          const randomNumX = Math.floor(Math.random() * 480);
-          const randomNumY = Math.floor(Math.random() * 480);
+          const randomNumX = Math.floor(Math.random() * (max - min + 1) + min);
+          const randomNumY = Math.floor(Math.random() * (max - min + 1) + min);
           kinokos[i] = new Kinoko(randomNumX, randomNumY)
         }
         return kinokos
       }
       makeKinokos()
 
+      // キャラクターの動き
       const charaMove = () => {
         ctx.clearRect(0, 0, 500, 500);
         ctx.drawImage(imageBoy, charaX, charaY, 18, 34);
@@ -95,6 +102,7 @@
         charaCentY = charaY + charaH / 2;
       }
 
+      // 画像描画
       imageBoy.onload = () => {
         ctx.drawImage(imageBoy, charaX, charaX, charaW, charaH);
       };
@@ -103,6 +111,7 @@
           kinoko.draw()
         })
       }
+      // キー入力イベント
       window.onkeydown = (event) => {
         switch (event.code) {
           case "ArrowUp":

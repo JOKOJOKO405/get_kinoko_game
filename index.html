@@ -119,15 +119,17 @@
           setTimeout(() => {
             this.isShowSpecialKinoko = true
             this.draw()
+            this.hideKinoko()
           }, time)
         }
         hideKinoko() {
           setTimeout(() => {
-            this.isShowSpecialKinoko = false
-            delete this
-            this.x = ''
-            this.y = ''
-          }, 3000)
+              this.isShowSpecialKinoko = false
+              ctx.clearRect(this.x, this.y, this.width, this.height)
+              delete this
+              this.x = ''
+              this.y = ''
+            }, 5000)
         }
       }
       // ランダム数値を作る関数
@@ -185,9 +187,6 @@
       // 特定時間経過後にスペシャルアイテムが出現
       window.onload = () => {
         specialKinoko.showKinoko()
-        if(!specialKinoko.isTouchedKinoko && specialKinoko.isShowSpecialKinoko){
-          specialKinoko.hideKinoko()
-        }
       }
 
       // キー入力イベント

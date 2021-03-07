@@ -6,10 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style type="text/css">
+      p {
+        margin: 0;
+      }
       .kinoko-count {
         font-size: 20px;
         font-weight: bold;
-        color: orange;
+        color: magenta;
+        margin-bottom: 24px;
+      }
+      .special-kinoko-serif {
+        font-size: 32px;
+        font-weight: bold;
+        color: magenta;
       }
     </style>
   </head>
@@ -21,6 +30,7 @@
       height="500"
     ></canvas>
     <p>取れたきのこの数<span id="js-kinoko" class="kinoko-count"></span>個</p>
+    <p id="special-kinoko" class="special-kinoko-serif"></p>
     <script>
       // きのこインスタンス格納用配列
       let kinokoGroup = []
@@ -28,6 +38,8 @@
       let kinokoCount = 0
       const kinokoDOM = document.getElementById('js-kinoko')
       kinokoDOM.innerText = kinokoCount
+
+      const specialKinokoAlert = document.getElementById('special-kinoko')
 
       // キャンバス
       const canvas = document.getElementById('canvas')
@@ -94,22 +106,41 @@
         }
         getKinoko() {
           super.getKinoko()
-          if (this.isTouchedKinoko) {
+          if (this.isTouchedKinoko && this.isShowSpecialKinoko) {
             this.isShowSpecialKinoko = false
+            specialKinokoAlert.innerText = 'スペシャルきのこゲット！！'
+            setTimeout(() => {
+              specialKinokoAlert.innerText = ''
+            }, 2000)
           }
         }
-        showKinoko() {}
+        showKinoko() {
+          const time = makeRandomNum(2000, 20000)
+          setTimeout(() => {
+            this.isShowSpecialKinoko = true
+            this.draw()
+          }, time)
+        }
+        hideKinoko() {
+          setTimeout(() => {
+            this.isShowSpecialKinoko = false
+            delete this
+            this.x = ''
+            this.y = ''
+          }, 3000)
+        }
       }
-
-      let specialKinoko = new SpecialKinoko(40, 300, 30, 30)
-
       // ランダム数値を作る関数
-      const makeRandomNum = () => {
-        const max = 480
-        const min = 30
+      const makeRandomNum = (max, min) => {
         const num = Math.floor(Math.random() * (max - min + 1) + min)
         return num
       }
+      let specialKinoko = new SpecialKinoko(
+        makeRandomNum(480, 30),
+        makeRandomNum(480, 30),
+        30,
+        30
+      )
 
       // キノコのインスタンス化複数
       const kinokoNum = 30
@@ -119,8 +150,8 @@
         let min = 30
 
         for (let i = 0; i < kinokoNum; i++) {
-          const randomNumX = makeRandomNum()
-          const randomNumY = makeRandomNum()
+          const randomNumX = makeRandomNum(480, 30)
+          const randomNumY = makeRandomNum(480, 30)
           kinokos[i] = new Kinoko(randomNumX, randomNumY)
           kinokoGroup.push(kinokos[i])
         }
@@ -153,11 +184,12 @@
       }
       // 特定時間経過後にスペシャルアイテムが出現
       window.onload = () => {
-        setTimeout(() => {
-          specialKinoko.isShowSpecialKinoko = true
-          specialKinoko.draw()
-        }, 2000)
+        specialKinoko.showKinoko()
+        if(!specialKinoko.isTouchedKinoko && specialKinoko.isShowSpecialKinoko){
+          specialKinoko.hideKinoko()
+        }
       }
+
       // キー入力イベント
       window.onkeydown = (event) => {
         switch (event.code) {

@@ -55,19 +55,23 @@
           this.centerX = this.x + this.width / 2;
           this.centerY = this.y + this.height / 2;
           this.isTouchedKinoko = false
-          kinokoGroup.push(this)
         }
         draw() {
           if(!this.isTouchedKinoko){
             ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
           }
         }
+        // pushKinoko(){
+        //   kinokoGroup.push(this)
+        // }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
         getKinoko(){
           if((charaCentX >= this.centerX && charaCentX <= this.x + this.width) && (charaCentY >= this.centerY && charaCentY <= this.y + this.height)){ 
             this.isTouchedKinoko = true
             kinokoCount++
             kinokoDOM.innerText = kinokoCount
+            this.x = ''
+            this.y = ''
             // alert('kinoko get!')
             delete this;
           }
@@ -85,6 +89,7 @@
           const randomNumX = Math.floor(Math.random() * (max - min + 1) + min);
           const randomNumY = Math.floor(Math.random() * (max - min + 1) + min);
           kinokos[i] = new Kinoko(randomNumX, randomNumY)
+          kinokoGroup.push(kinokos[i])
         }
         return kinokos
       }

@@ -34,8 +34,10 @@
       const ctx = canvas.getContext("2d");
       const imageBoy = new Image();
       const imageItem = new Image();
+      const imageSpecial = new Image();
       imageBoy.src = "./img/ico_boy1_1.gif";
       imageItem.src = './img/ico_mushroom2_23.gif'
+      imageSpecial.src = './img/ico_mushroom2_19.gif'
 
       // TODO ここクラス作れるのでは？
       let charaX = 0;
@@ -61,9 +63,6 @@
             ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
           }
         }
-        // pushKinoko(){
-        //   kinokoGroup.push(this)
-        // }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
         getKinoko(){
           if((charaCentX >= this.centerX && charaCentX <= this.x + this.width) && (charaCentY >= this.centerY && charaCentY <= this.y + this.height)){ 
@@ -77,6 +76,26 @@
           }
         }
       }
+
+      class SpecialKinoko extends Kinoko{
+        constructor(x, y, width, height, centerX, centerY){
+          super(x, y, width, height, centerX, centerY)
+          this.isShowSpecialKinoko = false
+        }
+        draw(){
+          if(!this.isTouchedKinoko && this.isShowSpecialKinoko){
+            ctx.drawImage(imageSpecial, this.x, this.y, this.width, this.height)
+          }
+        }
+        getKinoko(){
+          super.getKinoko()
+          if(this.isTouchedKinoko){
+            this.isShowSpecialKinoko = false
+          }
+        }
+      }
+
+      let specialKinoko = new SpecialKinoko(40, 300, 30, 30);
 
       // キノコのインスタンス化複数
       const kinokoNum = 30;
@@ -103,6 +122,8 @@
           kinoko.draw()
           kinoko.getKinoko()
         })
+        specialKinoko.draw()
+        specialKinoko.getKinoko()
         charaCentX = charaX + charaW / 2;
         charaCentY = charaY + charaH / 2;
       }
@@ -115,6 +136,13 @@
         kinokoGroup.forEach(kinoko => {
           kinoko.draw()
         })
+      }
+      // 特定時間経過後にスペシャルアイテムが出現
+      window.onload = () => {
+        setTimeout(() => {
+          specialKinoko.isShowSpecialKinoko = true;
+          specialKinoko.draw()
+        }, 2000)
       }
       // キー入力イベント
       window.onkeydown = (event) => {

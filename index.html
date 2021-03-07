@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style type="text/css">
-      .kinoko-count{
+      .kinoko-count {
         font-size: 20px;
         font-weight: bold;
         color: orange;
@@ -26,87 +26,101 @@
       let kinokoGroup = []
       // 取れたきのこの数
       let kinokoCount = 0
-      const kinokoDOM = document.getElementById("js-kinoko")
+      const kinokoDOM = document.getElementById('js-kinoko')
       kinokoDOM.innerText = kinokoCount
 
       // キャンバス
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      const imageBoy = new Image();
-      const imageItem = new Image();
-      const imageSpecial = new Image();
-      imageBoy.src = "./img/ico_boy1_1.gif";
+      const canvas = document.getElementById('canvas')
+      const ctx = canvas.getContext('2d')
+      const imageBoy = new Image()
+      const imageItem = new Image()
+      const imageSpecial = new Image()
+      imageBoy.src = './img/ico_boy1_1.gif'
       imageItem.src = './img/ico_mushroom2_23.gif'
       imageSpecial.src = './img/ico_mushroom2_19.gif'
 
       // TODO ここクラス作れるのでは？
-      let charaX = 0;
-      let charaY = 0;
-      let charaW = 18;
-      let charaH = 34;
-      let charaCentX;
-      let charaCentY;
+      let charaX = 0
+      let charaY = 0
+      let charaW = 18
+      let charaH = 34
+      let charaCentX
+      let charaCentY
 
       // きのこクラス
-      class Kinoko{
+      class Kinoko {
         constructor(x, y, width = 20, height = 20, centerX, centerY) {
-          this.x = x;
-          this.y = y;
-          this.width = width;
-          this.height = height;
-          this.centerX = this.x + this.width / 2;
-          this.centerY = this.y + this.height / 2;
+          this.x = x
+          this.y = y
+          this.width = width
+          this.height = height
+          this.centerX = this.x + this.width / 2
+          this.centerY = this.y + this.height / 2
           this.isTouchedKinoko = false
         }
         draw() {
-          if(!this.isTouchedKinoko){
+          if (!this.isTouchedKinoko) {
             ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
           }
         }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
-        getKinoko(){
-          if((charaCentX >= this.centerX && charaCentX <= this.x + this.width) && (charaCentY >= this.centerY && charaCentY <= this.y + this.height)){ 
+        getKinoko() {
+          if (
+            charaCentX >= this.centerX &&
+            charaCentX <= this.x + this.width &&
+            charaCentY >= this.centerY &&
+            charaCentY <= this.y + this.height
+          ) {
             this.isTouchedKinoko = true
             kinokoCount++
             kinokoDOM.innerText = kinokoCount
             this.x = ''
             this.y = ''
             // alert('kinoko get!')
-            delete this;
+            delete this
           }
         }
       }
 
-      class SpecialKinoko extends Kinoko{
-        constructor(x, y, width, height, centerX, centerY){
+      class SpecialKinoko extends Kinoko {
+        constructor(x, y, width, height, centerX, centerY) {
           super(x, y, width, height, centerX, centerY)
           this.isShowSpecialKinoko = false
         }
-        draw(){
-          if(!this.isTouchedKinoko && this.isShowSpecialKinoko){
+        draw() {
+          if (!this.isTouchedKinoko && this.isShowSpecialKinoko) {
             ctx.drawImage(imageSpecial, this.x, this.y, this.width, this.height)
           }
         }
-        getKinoko(){
+        getKinoko() {
           super.getKinoko()
-          if(this.isTouchedKinoko){
+          if (this.isTouchedKinoko) {
             this.isShowSpecialKinoko = false
           }
         }
+        showKinoko() {}
       }
 
-      let specialKinoko = new SpecialKinoko(40, 300, 30, 30);
+      let specialKinoko = new SpecialKinoko(40, 300, 30, 30)
+
+      // ランダム数値を作る関数
+      const makeRandomNum = () => {
+        const max = 480
+        const min = 30
+        const num = Math.floor(Math.random() * (max - min + 1) + min)
+        return num
+      }
 
       // キノコのインスタンス化複数
-      const kinokoNum = 30;
+      const kinokoNum = 30
       const makeKinokos = () => {
         let kinokos = {}
         let max = 480
         let min = 30
-        
+
         for (let i = 0; i < kinokoNum; i++) {
-          const randomNumX = Math.floor(Math.random() * (max - min + 1) + min);
-          const randomNumY = Math.floor(Math.random() * (max - min + 1) + min);
+          const randomNumX = makeRandomNum()
+          const randomNumY = makeRandomNum()
           kinokos[i] = new Kinoko(randomNumX, randomNumY)
           kinokoGroup.push(kinokos[i])
         }
@@ -116,53 +130,53 @@
 
       // キャラクターの動き
       const charaMove = () => {
-        ctx.clearRect(0, 0, 500, 500);
-        ctx.drawImage(imageBoy, charaX, charaY, 18, 34);
-        kinokoGroup.forEach(kinoko => {
+        ctx.clearRect(0, 0, 500, 500)
+        ctx.drawImage(imageBoy, charaX, charaY, 18, 34)
+        kinokoGroup.forEach((kinoko) => {
           kinoko.draw()
           kinoko.getKinoko()
         })
         specialKinoko.draw()
         specialKinoko.getKinoko()
-        charaCentX = charaX + charaW / 2;
-        charaCentY = charaY + charaH / 2;
+        charaCentX = charaX + charaW / 2
+        charaCentY = charaY + charaH / 2
       }
 
       // 画像描画
       imageBoy.onload = () => {
-        ctx.drawImage(imageBoy, charaX, charaX, charaW, charaH);
-      };
+        ctx.drawImage(imageBoy, charaX, charaX, charaW, charaH)
+      }
       imageItem.onload = () => {
-        kinokoGroup.forEach(kinoko => {
+        kinokoGroup.forEach((kinoko) => {
           kinoko.draw()
         })
       }
       // 特定時間経過後にスペシャルアイテムが出現
       window.onload = () => {
         setTimeout(() => {
-          specialKinoko.isShowSpecialKinoko = true;
+          specialKinoko.isShowSpecialKinoko = true
           specialKinoko.draw()
         }, 2000)
       }
       // キー入力イベント
       window.onkeydown = (event) => {
         switch (event.code) {
-          case "ArrowUp":
-            charaY -= 10;
-            break;
-          case "ArrowDown":
-            charaY += 10;
-            break;
-          case "ArrowRight":
-            charaX += 10;
-            break;
-          case "ArrowLeft":
-            charaX -= 10;
-            break;
+          case 'ArrowUp':
+            charaY -= 10
+            break
+          case 'ArrowDown':
+            charaY += 10
+            break
+          case 'ArrowRight':
+            charaX += 10
+            break
+          case 'ArrowLeft':
+            charaX -= 10
+            break
           default:
         }
-        charaMove();
-      };
+        charaMove()
+      }
     </script>
   </body>
 </html>

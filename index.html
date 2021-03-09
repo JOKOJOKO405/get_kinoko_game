@@ -64,16 +64,32 @@
         constructor(x, y, width = 20, height = 20, centerX, centerY) {
           this.x = x
           this.y = y
+          this.speedX = makeRandomNum(3, -20)
+          this.speedY = makeRandomNum(-5, 10)
           this.width = width
           this.height = height
           this.centerX = this.x + this.width / 2
           this.centerY = this.y + this.height / 2
           this.isTouchedKinoko = false
         }
-        draw() {
-          if (!this.isTouchedKinoko) {
-            ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
+        move() {
+          this.x += this.speedX
+          this.y += this.speedY
+          if(this.x < 0){
+            this.speedX *= -1
           }
+          if(this.x > 500) {
+            this.speedX *= -1
+          }
+          if(this.y < 0){
+            this.speedY *= -1
+          }
+          if(this.y > 500) {
+            this.speedY *= -1
+          }
+          ctx.drawImage(imageItem, this.x, this.y, this.width, this.height)
+          // if (!this.isTouchedKinoko) {
+          // }
         }
         // きのこグループの座標を取得してキャラとぶつかったかの判定を行う
         getKinoko() {
@@ -145,15 +161,15 @@
       )
 
       // キノコのインスタンス化複数
-      const kinokoNum = 30
+      const kinokoNum = 300
       const makeKinokos = () => {
         let kinokos = {}
         let max = 480
         let min = 30
 
         for (let i = 0; i < kinokoNum; i++) {
-          const randomNumX = makeRandomNum(480, 30)
-          const randomNumY = makeRandomNum(480, 30)
+          const randomNumX = makeRandomNum(max, min)
+          const randomNumY = makeRandomNum(max, min)
           kinokos[i] = new Kinoko(randomNumX, randomNumY)
           kinokoGroup.push(kinokos[i])
         }
@@ -207,6 +223,19 @@
           default:
         }
         charaMove()
+      }
+
+      window.requestAnimationFrame(mainLoop)
+
+      function mainLoop () {
+        // console.debug('hello')
+        ctx.clearRect(0,0, 500,500)
+        
+        kinokoGroup.forEach((kinoko) => {
+          kinoko.move()
+          // kinoko.x += 5
+        })
+        window.requestAnimationFrame(mainLoop)
       }
     </script>
   </body>
